@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Clock</title>
+   
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.input-container {
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+input[type="number"] {
+    width: 50px;
+    padding: 5px;
+    font-size: 16px;
+    margin: 5px;
+}
+
+.timer {
+    font-size: 48px;
+    margin: 20px 0;
+}
+
+.controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.controls button:hover {
+    background-color: #45a049;
+}
+
+#stop {
+    background-color: #f44336;
+}
+
+#stop:hover {
+    background-color: #e53935;
+}
+
+#reset {
+    background-color: #ff9800;
+}
+
+#reset:hover {
+    background-color: #fb8c00;
+}
+</style>
+<body>
+    <div class="container">
+        <h1>Pomodoro Clock</h1>
+        
+        <div class="input-container">
+            <label for="work-time">Work Time (minutes): </label>
+            <input type="number" id="work-time" value="25" min="1">
+        </div>
+        <div class="input-container">
+            <label for="break-time">Break Time (minutes): </label>
+            <input type="number" id="break-time" value="5" min="1">
+        </div>
+
+        <div class="timer">
+            <span id="minutes">25</span>:<span id="seconds">00</span>
+        </div>
+        
+        <div class="controls">
+            <button id="start">Start</button>
+            <button id="stop">Stop</button>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+    <script>
+        let minutesDisplay = document.getElementById('minutes');
+let secondsDisplay = document.getElementById('seconds');
+let startButton = document.getElementById('start');
+let stopButton = document.getElementById('stop');
+let resetButton = document.getElementById('reset');
+let workTimeInput = document.getElementById('work-time');
+let breakTimeInput = document.getElementById('break-time');
+
+let minutes;
+let seconds = 0;
+let timerInterval;
+let isWorkTime = true;
+
+function updateDisplay() {
+    minutesDisplay.textContent = String(minutes).padStart(2, '0');
+    secondsDisplay.textContent = String(seconds).padStart(2, '0');
+}
+
+function startTimer() {
+    minutes = isWorkTime ? parseInt(workTimeInput.value) : parseInt(breakTimeInput.value);
+    seconds = 0;
+    updateDisplay();
+    timerInterval = setInterval(() => {
+        if (seconds === 0) {
+            if (minutes === 0) {
+                isWorkTime = !isWorkTime;
+                clearInterval(timerInterval);
+                startTimer();
+          } else {
+                minutes--;
+                seconds = 59;
+            }
+        } else {
+            seconds--;
+        }
+        updateDisplay();
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    isWorkTime = true;
+    minutes = parseInt(workTimeInput.value);
+    seconds = 0;
+    updateDisplay();
+}
+
+startButton.addEventListener('click', startTimer);
+stopButton.addEventListener('click', stopTimer);
+resetButton.addEventListener('click', resetTimer);
+
+resetTimer();
+    </script>
+</body>
+</html>
